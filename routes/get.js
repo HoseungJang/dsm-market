@@ -88,7 +88,7 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
 
         for (const post in posts) {
             const { id, title, content, userId, img, createdAt, price, category } = post;
-            console.log(await User.findByPk(userId));
+            console.log(await User.findByPk(Number(userId)));
             const { nick: author } = await User.findByPk(userId);
             const comments = await Comment.findAll({ where : { postId: id, type: 0 }});
             const interest = await Interest.findOne({ where : { userId: requestUserId, postId: id, type: 0 }});
