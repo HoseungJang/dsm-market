@@ -86,7 +86,7 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
             });
         }
 
-        posts.forEach(post => {
+        for (const post in posts) {
             const { id, title, content, userId, img, createdAt, price, comments, interest, category } = post;
             const { nick: author } = await User.findByPk(userId);
             const comments = await Comment.findAll({ where : { postId: id, type: 0 }});
@@ -105,7 +105,7 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
                 img: img.split('\n')[0],
                 isMe: requestUserId === userId ? true : false,
             });
-        });
+        }
 
         return res.status(200).json({
             list,
@@ -156,7 +156,7 @@ router.get('/list/rent', verifyToken, async (req, res, next) => {
             });
         }
 
-        posts.forEach(post => {
+        for (const post in posts) {
             const { id, title, content, userId, img, createdAt, price, possible_time, comments, interest, category } = post;
             const { nick: author } = await User.findByPk(userId);
             const comments = await Comment.findAll({ where : { postId: id, type: 1 }});
@@ -175,7 +175,7 @@ router.get('/list/rent', verifyToken, async (req, res, next) => {
                 interest: interest ? true : false,
                 img: img.split('\n')[0],
             });
-        });
+        }
 
 
         return res.status(200).json({
