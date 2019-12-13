@@ -159,8 +159,8 @@ router.get('/list/rent', verifyToken, async (req, res, next) => {
         for (const post in posts) {
             const { id, title, content, userId, img, createdAt, price, possible_time, category } = post;
             const { nick: author } = await User.findByPk(Number(userId));
-            const comments = await Comment.findAll({ where : { postId: id, type: 1 }});
-            const interest = await Interest.findOne({ where : { userId: requestUserID, postId: id, type: 1 }});
+            const comments = await Comment.findAll({ where : { postId: Number(id), type: 1 }});
+            const interest = await Interest.findOne({ where : { userId: requestUserID, postId: Number(id), type: 1 }});
 
             list.push({
                 id,
