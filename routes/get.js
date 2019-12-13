@@ -50,6 +50,7 @@ router.get('/user/nick', verifyToken, async (req, res) => {
 
 router.get('/list/deal', verifyToken, async (req, res, next) => {
     try {
+        const { userId: requestUserId } = req.user;
         const { page, pagesize, search, category } = req.query;
         const offset = Number(page) > 0 ? Number(pagesize) * Number(page) : 0;
         const limit = Number(page) > 0 ? Number(pagesize) : 20;
@@ -86,13 +87,23 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
         }
 
         posts.forEach(post => {
-            const { id, title, img, createdAt, price } = post;
+            const { id, title, content, userId, img, createdAt, price, comments, interest, category } = post;
+            const { nick: author } = await User.findByPk(userId);
+            const comments = await Comment.findAll({ where : { postId: id, type: 0 }});
+            const interest = await Interest.findOne({ where : { userId: requestUserId, postId: id, type: 0 }});
+
             list.push({
+                id,
                 title,
-                price,
+                content,
+                author,
                 createdAt,
-                postId: id,
+                price,
+                category,
+                comments: comments.lentgh,
+                interest: interest ? true : false,
                 img: img.split('\n')[0],
+                isMe: requestUserId === userId ? true : false,
             });
         });
 
@@ -109,6 +120,7 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
 
 router.get('/list/rent', verifyToken, async (req, res, next) => {
     try {
+        const { userId: requestUserID } = req.user;
         const { page, pagesize, search, category } = req.query;
         const offset = Number(page) > 0 ? Number(pagesize) * Number(page) : 0;
         const limit = Number(page) > 0 ? Number(pagesize) : 20;
@@ -145,14 +157,23 @@ router.get('/list/rent', verifyToken, async (req, res, next) => {
         }
 
         posts.forEach(post => {
-            const { id, title, img, createdAt, price } = post;
+            const { id, title, content, userId, img, createdAt, price, possible_time, comments, interest, category } = post;
+            const { nick: author } = await User.findByPk(userId);
+            const comments = await Comment.findAll({ where : { postId: id, type: 1 }});
+            const interest = await Interest.findOne({ where : { userId: requestUserID, postId: id, type: 1 }});
 
             list.push({
-                img,
+                id,
                 title,
-                price,
+                content,
+                author,
                 createdAt,
-                postId: id,
+                price,
+                category,
+                possible_time: possible_time ? possible_time : null,
+                comments: comments.lentgh,
+                interest: interest ? true : false,
+                img: img.split('\n')[0],
             });
         });
 
