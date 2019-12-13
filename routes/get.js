@@ -87,7 +87,7 @@ router.get('/list/deal', verifyToken, async (req, res, next) => {
         }
 
         for (const post in posts) {
-            const { id, title, content, userId, img, createdAt, price, comments, interest, category } = post;
+            const { id, title, content, userId, img, createdAt, price, interest, category } = post;
             const { nick: author } = await User.findByPk(userId);
             const comments = await Comment.findAll({ where : { postId: id, type: 0 }});
             const interest = await Interest.findOne({ where : { userId: requestUserId, postId: id, type: 0 }});
@@ -157,7 +157,7 @@ router.get('/list/rent', verifyToken, async (req, res, next) => {
         }
 
         for (const post in posts) {
-            const { id, title, content, userId, img, createdAt, price, possible_time, comments, interest, category } = post;
+            const { id, title, content, userId, img, createdAt, price, possible_time, interest, category } = post;
             const { nick: author } = await User.findByPk(userId);
             const comments = await Comment.findAll({ where : { postId: id, type: 1 }});
             const interest = await Interest.findOne({ where : { userId: requestUserID, postId: id, type: 1 }});
